@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de encuestas | Melodify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+        .nav-links a:hover { color: #3b82f6; }
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .subtitle {
+            color: #475569;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #f97316;
+            padding-left: 1rem;
+        }
+        .filtros {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .filtros input, .filtros select {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+        }
+        .grid-encuestas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+        .card-encuesta {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            transition: 0.2s;
+            border: 1px solid #eef2ff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .card-encuesta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+        }
+        .badge-fecha {
+            font-size: 0.7rem;
+            background: #e2e8f0;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            color: #334155;
+        }
+        .badge-nueva {
+            background: #10b981;
+            color: white;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+        }
+        .genero-badge {
+            background: #f97316;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        hr {
+            margin: 1rem 0;
+        }
+        .insight-ia {
+            background: #f1f5f9;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            border-left: 4px solid #f97316;
+        }
+        .btn-limpiar {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+        }
+        .stats-resumen {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            margin-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 0 1rem; }
+            .grid-encuestas { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div class="logo"><i class="fas fa-headphones"></i> Melodify</div>
+    <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="recomendador.html">Recomendador</a>
+        <a href="encuestas_realizadas.html">Encuestas realizadas</a>
+        <a href="estadisticas.html">Estadísticas</a>
+        <a href="#">Tendencia hoy</a>
+        <a href="#">Música reciente</a>
+    </div>
+    <div><i class="far fa-user-circle"></i> Mi cuenta</div>
+</div>
+
+<div class="container">
+    <h1><i class="fas fa-history"></i> 📋 Historial de encuestas realizadas</h1>
+    <div class="subtitle">Encuestas del CSV original + tus nuevas encuestas enviadas desde el formulario</div>
+    
+    <div class="stats-resumen" id="statsResumen">
+        <span><i class="fas fa-database"></i> Cargando...</span>
+    </div>
+
+    <div class="filtros">
+        <i class="fas fa-filter"></i>
+        <input type="text" id="searchGenero" placeholder="Filtrar por género musical" style="width: 180px;">
+        <input type="text" id="searchEdad" placeholder="Edad" style="width: 100px;">
+        <select id="filtroOcupacion">
+            <option value="">Todas las ocupaciones</option>
+            <option>Estudiante</option><option>Docente</option><option>Empleado/a</option>
+            <option>Trabajador/a independiente</option><option>Profesionista</option><option>Inversionista</option>
+            <option>Auditor de TI</option><option>Manager</option><option>Pintor</option><option>Arqueolga</option>
+        </select>
+        <button id="resetFiltros" class="btn-limpiar">Limpiar</button>
+    </div>
+
+    <div id="listaEncuestas" class="grid-encuestas">
+        <div style="text-align:center; grid-column:1/-1;">Cargando historial...</div>
+    </div>
+</div>
+<footer>
+    <p>🎵 Datos basados en encuestas reales (CSV) + nuevas encuestas que hayas enviado • Proyecto académico "Recomendador Musical"</p>
+    <button onclick="borrarMisEncuestas()" style="margin-top:0.5rem; background:none; border:1px solid #cbd5e1; padding:0.3rem 1rem; border-radius:2rem; cursor:pointer; font-size:0.7rem;"><i class="fas fa-trash-alt"></i> Borrar MIS encuestas (solo las que envié)</button>
+</footer>
+
+<script>
+    // ---------- NUEVO CSV: base de datos_ev2.csv ----------
+    const csvData = `Marca temporal,id,aviso_priv,Datos Personales,genero,edad,ocupacion,genero_fav,medio,why_music,song1,song2,song3,song4,song5,song6,song7,song8,song9,song10,song11,song12,song13,song14,song15,song16,song17,song18,song19,song20,song21,song22,song23,song24,song25,song26,song27,song28,song29,song30
+24/5/2026 21:25:10,0,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20 años,Trabajar,Hip-Hop,Spotify,Para trabajar o estudiar,4,6,4,3,5,6,1,4,4,1,3,6,1,5,6,1,3,5,1,4,4,4,1,2,6,1,2,2,6,3
+24/5/2026 21:29:14,1,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,19,Estudiante ,Electrónica,Apple Music,Para hacer actividad física,3,6,6,3,6,5,6,3,6,6,6,6,6,6,6,6,3,6,6,5,6,6,3,6,6,6,6,6,6,6
+24/5/2026 21:34:45,2,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante,Rock,Spotify,Para alegrar mi día,5,5,4,2,4,5,1,2,2,6,6,3,6,5,3,6,5,6,2,5,5,3,1,3,3,6,2,6,4,4
+24/5/2026 21:46:10,3,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,51 años,Profesionista,Rock,"Spotify, Youtube Music",Para alegrar mi día,5,5,5,5,5,5,5,4,3,4,2,5,4,3,4,3,4,3,4,3,5,5,4,3,3,3,4,2,3,5
+24/5/2026 22:38:12,4,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Persona no binaria,21,Inversionista,Rock,"Spotify, Youtube Music",Para relajarme,6,6,2,2,1,6,1,4,6,3,1,6,2,5,5,1,1,1,1,3,6,4,3,3,5,6,6,4,3,6
+24/5/2026 23:50:25,5,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,20,Estudiante,Rock,Spotify,Por hábito,5,5,5,6,5,3,6,4,2,6,6,6,6,6,6,6,6,6,2,6,6,6,6,6,6,6,6,6,6,6
+24/5/2026 23:54:09,6,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,21,Estudiante,Pop,Spotify,Por hábito,2,5,5,5,5,5,5,5,3,5,5,5,5,5,5,5,5,5,5,5,3,4,2,5,5,5,4,6,6,5
+25/5/2026 6:42:01,7,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,20,Estudiante / empleado,Rock,"Spotify, Youtube Music",Para trabajar o estudiar,4,4,3,5,6,5,2,2,2,2,6,3,3,6,3,1,3,3,2,3,1,3,1,1,1,2,1,2,2,2
+25/5/2026 8:50:12,8,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante,Rock,"Spotify, MP3",Para trabajar o estudiar,5,4,4,5,5,5,2,4,6,6,6,6,6,6,6,6,3,4,6,6,6,6,6,6,6,6,6,6,6,5
+25/5/2026 9:36:33,9,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20,Estudiante,Electrónica,Spotify,Por hábito,4,5,4,5,3,5,3,4,3,3,6,5,4,4,4,3,4,5,3,4,3,3,3,3,4,4,4,3,3,4
+25/5/2026 19:35:38,10,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante ,Rock,Youtube Music,Para relajarme,5,5,5,5,5,5,4,5,3,3,6,5,4,3,4,2,5,5,5,5,5,3,4,3,2,4,3,3,3,5
+25/5/2026 19:38:58,11,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante,Rock,"Youtube Music, MP3",Por hábito,5,6,6,4,4,5,3,3,3,1,3,4,4,1,2,3,5,4,3,4,4,1,3,6,1,6,6,6,6,4
+25/5/2026 23:09:31,12,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante ,Rock,Spotify,Para trabajar o estudiar,3,5,5,4,3,4,1,2,2,2,6,4,2,4,4,3,3,2,1,2,6,2,1,1,1,6,2,6,3,3
+28/5/2026 11:19:36,13,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,25,Arqueolga ,Pop,"Youtube Music, Música descargada ",Para trabajar o estudiar,4,4,4,3,4,5,6,3,3,2,6,3,3,1,1,1,3,6,6,3,3,3,4,6,1,2,3,6,6,4
+28/5/2026 17:10:44,14,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,23,Estudiante ,Rock,Spotify,Para trabajar o estudiar,5,4,5,5,3,5,4,6,3,3,6,3,6,3,6,6,4,4,6,4,6,3,3,1,1,3,1,6,2,3
+28/5/2026 17:20:32,15,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,19,Estudiante ,Pop,"Spotify, Apple Music",Por hábito,2,3,1,4,4,5,5,5,4,4,5,5,4,4,4,4,3,4,4,4,4,3,4,4,4,4,4,4,4,4
+28/5/2026 17:39:33,16,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20,Estudiante,Latina,Spotify,Por hábito,5,5,5,5,5,5,3,4,2,3,3,5,5,4,4,4,4,5,2,4,3,4,4,4,5,3,4,3,3,5
+28/5/2026 18:39:02,17,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20,Estudiante ,Latina,En la combi cuando voy con mi mamá ponen música ,Ni modo que le diga que la apague ,6,6,6,6,6,6,6,6,6,1,1,6,1,6,6,1,6,6,1,6,4,6,6,6,6,1,6,1,6,6
+28/5/2026 19:36:48,18,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante,Pop,Apple Music,Por hábito,4,3,3,3,4,3,4,5,5,5,3,4,4,4,4,3,4,2,4,5,6,3,2,4,4,3,3,6,6,3
+28/5/2026 19:40:39,19,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante ,Pop,"Spotify, Apple Music",Para trabajar o estudiar,3,6,5,4,5,4,5,5,3,5,3,3,3,3,5,3,6,5,5,3,3,3,4,4,4,5,3,6,6,6
+28/5/2026 19:48:35,20,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante ,Rock,Spotify,Para hacer actividad física,3,4,3,4,3,4,6,3,6,3,6,6,6,6,3,2,4,5,6,5,3,3,2,6,3,6,3,6,6,3
+28/5/2026 20:36:20,21,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,19,Estudiante,Rock,Spotify,Para relajarme,4,3,4,3,4,3,6,3,3,1,6,4,6,3,2,6,3,3,6,4,6,1,1,1,1,6,2,6,2,3
+28/5/2026 21:31:49,22,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Auditor de TI,Rock,Spotify,Por hábito,5,5,4,5,4,5,5,5,5,3,4,4,4,3,3,3,4,5,2,5,3,5,3,3,1,3,3,6,4,5
+28/5/2026 22:19:07,23,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante,Hip-Hop,Apple Music,Para trabajar o estudiar,4,4,4,5,6,4,6,4,6,6,6,6,6,5,4,6,5,5,6,5,6,3,1,6,4,6,3,6,6,4
+28/5/2026 22:54:11,24,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Persona no binaria,23,Pintor,Rock,Trevel,Para trabajar o estudiar,4,5,4,3,4,5,6,5,3,6,6,5,4,2,6,6,5,4,6,3,4,3,6,2,1,2,4,6,3,5
+28/5/2026 22:59:43,25,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,29,Manager,Pop,Youtube Music,Para relajarme,4,2,4,2,5,3,3,3,5,5,6,4,3,3,2,3,5,2,3,5,6,4,4,3,3,3,3,5,3,5
+29/5/2026 11:16:23,26,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,23,Estudiante,Electrónica,Youtube Music,Para alegrar mi día,5,5,5,5,5,3,3,5,5,6,6,6,6,4,6,6,5,5,6,5,4,4,5,6,6,5,5,5,5,5`;
+
+    // Función mejorada para parsear CSV (maneja comillas)
+    function parseCSV(csv) {
+        const lines = csv.trim().split(/\r?\n/);
+        const headers = lines[0].split(',').map(h => h.trim());
+        const records = [];
+        
+        for(let i = 1; i < lines.length; i++) {
+            if(!lines[i].trim()) continue;
+            
+            let row = [];
+            let inQuotes = false;
+            let current = '';
+            
+            for(let char of lines[i]) {
+                if(char === '"') {
+                    inQuotes = !inQuotes;
+                } else if(char === ',' && !inQuotes) {
+                    row.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            row.push(current.trim());
+            
+            if(row.length < headers.length) continue;
+            
+            let obj = {};
+            headers.forEach((h, idx) => {
+                let value = row[idx] || "";
+                if(value.startsWith('"') && value.endsWith('"')) {
+                    value = value.slice(1, -1);
+                }
+                obj[h] = value;
+            });
+            records.push(obj);
+        }
+        return records;
+    }
+    
+    // Función para extraer número de edad
+    function extractAge(edadStr) {
+        if(!edadStr) return "?";
+        const match = String(edadStr).match(/\d+/);
+        return match ? match[0] : edadStr;
+    }
+    
+    // Convertir registros del nuevo CSV al formato interno
+    function adaptarRegistro(reg) {
+        return {
+            genero: reg.genero || "Prefiere no responder",
+            edad: extractAge(reg.edad),
+            ocupacion: reg.ocupacion || "No especificada",
+            genero_musical_favorito: reg.genero_fav || "No especificado",
+            plataforma_musica: reg.medio || "No especificada",
+            motivo_musica: reg.why_music || "No especificado",
+            fecha: reg["Marca temporal"] || `2026-0${Math.floor(Math.random()*5)+1}-${Math.floor(Math.random()*28)+1}`,
+            tipo: "csv"
+        };
+    }
+    
+    const rawEncuestas = parseCSV(csvData);
+    const encuestasCSV = rawEncuestas.map(adaptarRegistro).filter(e => e.genero_musical_favorito && e.genero_musical_favorito !== "");
+    
+    // ---------- CARGAR ENCUESTAS GUARDADAS POR USUARIOS (desde localStorage) ----------
+    let encuestasUsuario = JSON.parse(localStorage.getItem('todasEncuestas')) || [];
+    
+    // Convertir encuestasUsuario al mismo formato que las CSV para unificarlas
+    const encuestasBase = encuestasCSV;
+    
+    const encuestasUnificadas = [...encuestasBase];
+    
+    encuestasUsuario.forEach((enc, index) => {
+        encuestasUnificadas.push({
+            id: `usuario_${Date.now()}_${index}`,
+            genero: enc.genero_usuario || "Prefiero no responder",
+            edad: enc.edad || "?",
+            ocupacion: enc.ocupacion || "No especificada",
+            genero_musical_favorito: enc.genero_favorito_declarado || enc.estilo_recomendado || "Pop",
+            plataforma_musica: enc.plataforma_musica || "No especificada",
+            motivo_musica: enc.motivo_musica || "Para disfrutar",
+            fechaSim: enc.fecha || new Date().toLocaleDateString('es-ES'),
+            tipo: "usuario",
+            cancion_recomendada: enc.cancion_recomendada || "",
+            artista_recomendado: enc.artista_recomendado || ""
+        });
+    });
+
+    // Función para generar insight IA
+    function generarInsight(encuesta) {
+        const generoFav = encuesta.genero_musical_favorito;
+        if (encuesta.tipo === "usuario" && encuesta.cancion_recomendada) {
+            return `🎧 Encuesta enviada el ${encuesta.fechaSim}. Basado en sus respuestas, se recomendó: "${encuesta.cancion_recomendada}" de ${encuesta.artista_recomendado || "artista destacado"}. ¡Perfil definido hacia el ${generoFav}!`;
+        }
+        return `🎧 Según sus respuestas, predomina el género ${generoFav}. ¡Gracias por participar en el estudio musical!`;
+    }
+
+    function renderizarEncuestas(filtradas) {
+        const contenedor = document.getElementById('listaEncuestas');
+        const statsDiv = document.getElementById('statsResumen');
+        const totalCSV = encuestasBase.length;
+        const totalUser = encuestasUsuario.length;
+        statsDiv.innerHTML = `
+            <span><i class="fas fa-database"></i> Total encuestas: ${totalCSV + totalUser}</span>
+            <span><i class="fas fa-file-csv"></i> Base histórica: ${totalCSV}</span>
+            <span><i class="fas fa-user-plus"></i> Tus encuestas: ${totalUser}</span>
+        `;
+        
+        if (!filtradas.length) {
+            contenedor.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem;">No hay encuestas con esos filtros 🌟</div>`;
+            return;
+        }
+        let html = '';
+        filtradas.forEach(enc => {
+            const insight = generarInsight(enc);
+            const esNueva = enc.tipo === "usuario";
+            const fechaMostrar = enc.fechaSim || enc.fecha || '2026-01-01';
+            html += `
+                <div class="card-encuesta">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="badge-fecha"><i class="far fa-calendar-alt"></i> ${fechaMostrar}</span>
+                        <div>
+                            ${esNueva ? '<span class="badge-nueva"><i class="fas fa-star"></i> Nueva</span>' : ''}
+                            <span class="genero-badge">${enc.genero_musical_favorito}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <i class="fas fa-user"></i> <strong>${enc.genero || "Prefiere no responder"}</strong> · ${enc.edad || "?"} años · ${enc.ocupacion || "?"}
+                    </div>
+                    <div style="margin-top: 6px; font-size:0.85rem;">
+                        <i class="fas fa-headphones"></i> Plataforma: ${enc.plataforma_musica || "—"} · Motivo: ${enc.motivo_musica || "—"}
+                    </div>
+                    <hr>
+                    <div class="insight-ia">
+                        <i class="fas fa-robot" style="margin-right:6px;"></i> <strong>Insight IA:</strong> ${insight}
+                    </div>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
+    }
+
+    function aplicarFiltros() {
+        const generoBuscar = document.getElementById('searchGenero').value.toLowerCase();
+        const edadBuscar = document.getElementById('searchEdad').value;
+        const ocupacionFiltro = document.getElementById('filtroOcupacion').value;
+        let filtradas = [...encuestasUnificadas];
+        if (generoBuscar) {
+            filtradas = filtradas.filter(e => e.genero_musical_favorito?.toLowerCase().includes(generoBuscar));
+        }
+        if (edadBuscar && !isNaN(edadBuscar)) {
+            filtradas = filtradas.filter(e => parseInt(e.edad) === parseInt(edadBuscar));
+        }
+        if (ocupacionFiltro) {
+            filtradas = filtradas.filter(e => e.ocupacion?.toLowerCase().includes(ocupacionFiltro.toLowerCase()));
+        }
+        renderizarEncuestas(filtradas);
+    }
+
+    document.getElementById('searchGenero').addEventListener('input', aplicarFiltros);
+    document.getElementById('searchEdad').addEventListener('input', aplicarFiltros);
+    document.getElementById('filtroOcupacion').addEventListener('change', aplicarFiltros);
+    document.getElementById('resetFiltros').addEventListener('click', () => {
+        document.getElementById('searchGenero').value = '';
+        document.getElementById('searchEdad').value = '';
+        document.getElementById('filtroOcupacion').value = '';
+        renderizarEncuestas(encuestasUnificadas);
+    });
+
+    // Función para borrar SOLO las encuestas del usuario
+    window.borrarMisEncuestas = function() {
+        if (confirm("¿Eliminar TODAS tus encuestas enviadas? (las del CSV original se conservan)")) {
+            localStorage.removeItem('todasEncuestas');
+            location.reload();
+        }
+    };
+
+    // inicial
+    renderizarEncuestas(encuestasUnificadas);
+</script>
+</body>
+</html>
