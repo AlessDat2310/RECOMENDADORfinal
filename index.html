@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Melodify | Tu espacio musical</title>
+    <!-- Google Fonts & CSS sutil -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            scroll-behavior: smooth;
+        }
+        /* navbar */
+        .navbar {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #1e293b;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover {
+            color: #3b82f6;
+        }
+        .hero-music {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url('https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg?auto=compress&cs=tinysrgb&w=1600');
+            background-size: cover;
+            background-position: center 30%;
+            height: 55vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            border-radius: 0 0 3rem 3rem;
+            margin-bottom: 2rem;
+        }
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        .btn-grande {
+            background: #f97316;
+            border: none;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 1rem 2.5rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(249,115,22,0.3);
+            margin-top: 2rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-grande:hover {
+            background: #ea580c;
+            transform: scale(1.02);
+        }
+        .section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .card-historial {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid #eef2ff;
+        }
+        .grid-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        .stat-box {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-secundario {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 3rem;
+        }
+        @media (max-width: 700px) {
+            .navbar { flex-direction: column; gap: 0.8rem; }
+            .hero-text h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><i class="fas fa-headphones"></i> Melodify</div>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="recomendador.html">Recomendador</a>
+            <a href="encuestas_realizadas.html">Encuestas realizadas</a>
+            <a href="estadisticas.html">Estadísticas</a>
+            <a href="#">Tendencia hoy</a>
+            <a href="#">Música reciente</a>
+        </div>
+        <div><i class="far fa-user-circle"></i> Mi cuenta</div>
+    </div>
+
+    <div class="hero-music">
+        <div class="hero-text">
+            <h1>Tu próxima canción favorita te espera</h1>
+            <p>Descubre música que conecta con tu alma</p>
+            <a href="recomendador.html" class="btn-grande"><i class="fas fa-clipboard-list"></i> Recomendación personal · Realiza tu encuesta</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="card-historial">
+            <h2><i class="fas fa-history"></i> 📋 Historial de encuestas recientes</h2>
+            <p style="margin: 1rem 0 0.5rem; color: #334155;">Personas que ya compartieron sus gustos musicales (datos simulados con insights IA)</p>
+            <div id="historialPreview" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                <!-- JS llena dinámicamente con el nuevo CSV -->
+            </div>
+            <div style="text-align: right; margin-top: 1rem;">
+                <a href="encuestas_realizadas.html" class="btn-secundario" style="background:#334155;">Ver historial completo →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2><i class="fas fa-chart-simple"></i> Estadísticas rápidas</h2>
+        <div class="grid-stats">
+            <div class="stat-box"><i class="fas fa-music fa-2x" style="color:#3b82f6"></i><h3>Género predominante</h3><p id="statGenero">Pop</p><small>según encuestas</small></div>
+            <div class="stat-box"><i class="fas fa-users fa-2x" style="color:#a855f7"></i><h3>Edad promedio</h3><p id="statEdad">--</p><small>años</small></div>
+            <div class="stat-box"><i class="fas fa-star fa-2x" style="color:#f97316"></i><h3>Plataforma favorita</h3><p id="statPlataforma">Spotify</p><small>más usada</small></div>
+            <div class="stat-box"><i class="fas fa-head-side-headphones fa-2x"></i><h3>Motivo principal</h3><p id="statMotivo">Para alegrar día</p></div>
+        </div>
+        <a href="estadisticas.html" style="display:inline-block; margin-top:1rem; color:#3b82f6;">Ver dashboard completo →</a>
+    </div>
+    <footer>
+        <p>🎵 Proyecto académico "Recomendador Musical" · Datos con fines estadísticos</p>
+    </footer>
+
+    <script>
+        // NUEVO CSV: base de datos_ev2.csv (adaptado al formato interno)
+        const csvData = `Marca temporal,id,aviso_priv,Datos Personales,genero,edad,ocupacion,genero_fav,medio,why_music,song1,song2,song3,song4,song5,song6,song7,song8,song9,song10,song11,song12,song13,song14,song15,song16,song17,song18,song19,song20,song21,song22,song23,song24,song25,song26,song27,song28,song29,song30
+24/5/2026 21:25:10,0,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20 años,Trabajar,Hip-Hop,Spotify,Para trabajar o estudiar,4,6,4,3,5,6,1,4,4,1,3,6,1,5,6,1,3,5,1,4,4,4,1,2,6,1,2,2,6,3
+24/5/2026 21:29:14,1,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,19,Estudiante ,Electrónica,Apple Music,Para hacer actividad física,3,6,6,3,6,5,6,3,6,6,6,6,6,6,6,6,3,6,6,5,6,6,3,6,6,6,6,6,6,6
+24/5/2026 21:34:45,2,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante,Rock,Spotify,Para alegrar mi día,5,5,4,2,4,5,1,2,2,6,6,3,6,5,3,6,5,6,2,5,5,3,1,3,3,6,2,6,4,4
+24/5/2026 21:46:10,3,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,51 años,Profesionista,Rock,"Spotify, Youtube Music",Para alegrar mi día,5,5,5,5,5,5,5,4,3,4,2,5,4,3,4,3,4,3,4,3,5,5,4,3,3,3,4,2,3,5
+24/5/2026 22:38:12,4,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Persona no binaria,21,Inversionista,Rock,"Spotify, Youtube Music",Para relajarme,6,6,2,2,1,6,1,4,6,3,1,6,2,5,5,1,1,1,1,3,6,4,3,3,5,6,6,4,3,6
+24/5/2026 23:50:25,5,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,20,Estudiante,Rock,Spotify,Por hábito,5,5,5,6,5,3,6,4,2,6,6,6,6,6,6,6,6,6,2,6,6,6,6,6,6,6,6,6,6,6
+24/5/2026 23:54:09,6,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,21,Estudiante,Pop,Spotify,Por hábito,2,5,5,5,5,5,5,5,3,5,5,5,5,5,5,5,5,5,5,5,3,4,2,5,5,5,4,6,6,5
+25/5/2026 6:42:01,7,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,20,Estudiante / empleado,Rock,"Spotify, Youtube Music",Para trabajar o estudiar,4,4,3,5,6,5,2,2,2,2,6,3,3,6,3,1,3,3,2,3,1,3,1,1,1,2,1,2,2,2
+25/5/2026 8:50:12,8,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante,Rock,"Spotify, MP3",Para trabajar o estudiar,5,4,4,5,5,5,2,4,6,6,6,6,6,6,6,6,3,4,6,6,6,6,6,6,6,6,6,6,6,5
+25/5/2026 9:36:33,9,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20,Estudiante,Electrónica,Spotify,Por hábito,4,5,4,5,3,5,3,4,3,3,6,5,4,4,4,3,4,5,3,4,3,3,3,3,4,4,4,3,3,4
+25/5/2026 19:35:38,10,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante ,Rock,Youtube Music,Para relajarme,5,5,5,5,5,5,4,5,3,3,6,5,4,3,4,2,5,5,5,5,5,3,4,3,2,4,3,3,3,5
+25/5/2026 19:38:58,11,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante,Rock,"Youtube Music, MP3",Por hábito,5,6,6,4,4,5,3,3,3,1,3,4,4,1,2,3,5,4,3,4,4,1,3,6,1,6,6,6,6,4
+25/5/2026 23:09:31,12,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante ,Rock,Spotify,Para trabajar o estudiar,3,5,5,4,3,4,1,2,2,2,6,4,2,4,4,3,3,2,1,2,6,2,1,1,1,6,2,6,3,3
+28/5/2026 11:19:36,13,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,25,Arqueolga ,Pop,"Youtube Music, Música descargada ",Para trabajar o estudiar,4,4,4,3,4,5,6,3,3,2,6,3,3,1,1,1,3,6,6,3,3,3,4,6,1,2,3,6,6,4
+28/5/2026 17:10:44,14,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,23,Estudiante ,Rock,Spotify,Para trabajar o estudiar,5,4,5,5,3,5,4,6,3,3,6,3,6,3,6,6,4,4,6,4,6,3,3,1,1,3,1,6,2,3
+28/5/2026 17:20:32,15,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Mujer,19,Estudiante ,Pop,"Spotify, Apple Music",Por hábito,2,3,1,4,4,5,5,5,4,4,5,5,4,4,4,4,3,4,4,4,4,3,4,4,4,4,4,4,4,4
+28/5/2026 17:39:33,16,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20,Estudiante,Latina,Spotify,Por hábito,5,5,5,5,5,5,3,4,2,3,3,5,5,4,4,4,4,5,2,4,3,4,4,4,5,3,4,3,3,5
+28/5/2026 18:39:02,17,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,20,Estudiante ,Latina,En la combi cuando voy con mi mamá ponen música ,Ni modo que le diga que la apague ,6,6,6,6,6,6,6,6,6,1,1,6,1,6,6,1,6,6,1,6,4,6,6,6,6,1,6,1,6,6
+28/5/2026 19:36:48,18,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante,Pop,Apple Music,Por hábito,4,3,3,3,4,3,4,5,5,5,3,4,4,4,4,3,4,2,4,5,6,3,2,4,4,3,3,6,6,3
+28/5/2026 19:40:39,19,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,22,Estudiante ,Pop,"Spotify, Apple Music",Para trabajar o estudiar,3,6,5,4,5,4,5,5,3,5,3,3,3,3,5,3,6,5,5,3,3,3,4,4,4,5,3,6,6,6
+28/5/2026 19:48:35,20,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante ,Rock,Spotify,Para hacer actividad física,3,4,3,4,3,4,6,3,6,3,6,6,6,6,3,2,4,5,6,5,3,3,2,6,3,6,3,6,6,3
+28/5/2026 20:36:20,21,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,19,Estudiante,Rock,Spotify,Para relajarme,4,3,4,3,4,3,6,3,3,1,6,4,6,3,2,6,3,3,6,4,6,1,1,1,1,6,2,6,2,3
+28/5/2026 21:31:49,22,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Auditor de TI,Rock,Spotify,Por hábito,5,5,4,5,4,5,5,5,5,3,4,4,4,3,3,3,4,5,2,5,3,5,3,3,1,3,3,6,4,5
+28/5/2026 22:19:07,23,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,21,Estudiante,Hip-Hop,Apple Music,Para trabajar o estudiar,4,4,4,5,6,4,6,4,6,6,6,6,6,5,4,6,5,5,6,5,6,3,1,6,4,6,3,6,6,4
+28/5/2026 22:54:11,24,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Persona no binaria,23,Pintor,Rock,Trevel,Para trabajar o estudiar,4,5,4,3,4,5,6,5,3,6,6,5,4,2,6,6,5,4,6,3,4,3,6,2,1,2,4,6,3,5
+28/5/2026 22:59:43,25,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,29,Manager,Pop,Youtube Music,Para relajarme,4,2,4,2,5,3,3,3,5,5,6,4,3,3,2,3,5,2,3,5,6,4,4,3,3,3,3,5,3,5
+29/5/2026 11:16:23,26,Acepto haber leído el aviso de privacidad y otorgo mi consentimiento,0,Hombre,23,Estudiante,Electrónica,Youtube Music,Para alegrar mi día,5,5,5,5,5,3,3,5,5,6,6,6,6,4,6,6,5,5,6,5,4,4,5,6,6,5,5,5,5,5`;
+
+        // Función mejorada para parsear CSV (maneja comillas y campos con comas)
+        function parseCSVtoArray(csv) {
+            const lines = csv.trim().split(/\r?\n/);
+            const headers = lines[0].split(',').map(h => h.trim());
+            const records = [];
+            
+            for(let i = 1; i < lines.length; i++) {
+                if(!lines[i].trim()) continue;
+                
+                // Manejar campos entre comillas
+                let row = [];
+                let inQuotes = false;
+                let current = '';
+                
+                for(let char of lines[i]) {
+                    if(char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if(char === ',' && !inQuotes) {
+                        row.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                row.push(current.trim());
+                
+                if(row.length < headers.length) continue;
+                
+                let obj = {};
+                headers.forEach((h, idx) => {
+                    let value = row[idx] || "";
+                    // Limpiar comillas sobrantes
+                    if(value.startsWith('"') && value.endsWith('"')) {
+                        value = value.slice(1, -1);
+                    }
+                    obj[h] = value;
+                });
+                records.push(obj);
+            }
+            return records;
+        }
+        
+        // Convertir registros del nuevo CSV al formato interno (cancion_01, etc.)
+        function adaptarRegistro(reg) {
+            const adapted = {
+                id: reg.id,
+                genero: reg.genero,
+                edad: reg.edad,
+                ocupacion: reg.ocupacion,
+                genero_musical_favorito: reg.genero_fav,
+                plataforma_musica: reg.medio,
+                motivo_musica: reg.why_music
+            };
+            // Mapear song1..song30 a cancion_01..cancion_30
+            for(let i = 1; i <= 30; i++) {
+                const songKey = `song${i}`;
+                const cancionKey = `cancion_${i.toString().padStart(2, '0')}`;
+                adapted[cancionKey] = reg[songKey] || "0";
+            }
+            return adapted;
+        }
+        
+        const rawEncuestas = parseCSVtoArray(csvData);
+        const encuestas = rawEncuestas.map(adaptarRegistro).filter(e => e.genero && e.genero !== "");
+        
+        // estadísticas rápidas
+        function moda(arr) {
+            let freq = {};
+            arr.forEach(v => freq[v] = (freq[v]||0)+1);
+            let max = 0, modo = arr[0];
+            for(let k in freq) if(freq[k]>max) { max=freq[k]; modo=k; }
+            return modo;
+        }
+        
+        let generos = encuestas.map(e => e.genero_musical_favorito).filter(g => g);
+        let plataformas = encuestas.map(e => e.plataforma_musica).filter(p => p);
+        let motivos = encuestas.map(e => e.motivo_musica).filter(m => m);
+        
+        // Extraer número de edad (puede venir como "20 años" o "20")
+        let edades = encuestas.map(e => {
+            let edadRaw = e.edad;
+            if(typeof edadRaw === 'string') {
+                let numMatch = edadRaw.match(/\d+/);
+                return numMatch ? parseInt(numMatch[0]) : NaN;
+            }
+            return parseInt(edadRaw);
+        }).filter(a => !isNaN(a));
+        
+        let promedioEdad = edades.length > 0 ? (edades.reduce((a,b)=>a+b,0)/edades.length).toFixed(1) : "--";
+        
+        document.getElementById('statGenero').innerText = generos.length > 0 ? moda(generos) : "Rock";
+        document.getElementById('statEdad').innerText = promedioEdad;
+        document.getElementById('statPlataforma').innerText = plataformas.length > 0 ? moda(plataformas) : "Spotify";
+        document.getElementById('statMotivo').innerText = motivos.length > 0 ? moda(motivos) : "Para trabajar o estudiar";
+        
+        // Mapa de nombres de canciones para insights
+        const mapNombres = {
+            1:"Bohemian Rhapsody", 2:"Somebody to Love", 3:"Smells Like Teen Spirit", 4:"Come As You Are",
+            5:"Hotel California", 6:"Take It Easy", 7:"Stairway to Heaven", 8:"Sweet Child O' Mine",
+            9:"Livin' on a Prayer", 10:"Don't Stop Believin'", 11:"Blinding Lights", 12:"Save Your Tears",
+            13:"Dancing Queen", 14:"Mamma Mia", 15:"Billie Jean", 16:"Beat It", 17:"Anti-Hero", 
+            18:"Cruel Summer", 19:"As It Was", 20:"Watermelon Sugar", 21:"Flowers", 22:"Midnight Sky",
+            23:"Espresso", 24:"Please Please Please", 25:"greedy", 26:"exes", 27:"Levitating", 
+            28:"Don't Start Now", 29:"Lose Yourself", 30:"Till I Collapse"
+        };
+        
+        function getResumenIA(encuesta) {
+            const gen = encuesta.genero_musical_favorito || "música";
+            let cancionesAltas = [];
+            for(let i = 1; i <= 30; i++) {
+                let key = `cancion_${i.toString().padStart(2,'0')}`;
+                let val = parseInt(encuesta[key]);
+                if(!isNaN(val) && val >= 4 && val <= 5) {
+                    cancionesAltas.push(i);
+                }
+            }
+            let cancionAlta = "alguna canción";
+            if(cancionesAltas.length > 0) {
+                let firstHigh = cancionesAltas[0];
+                cancionAlta = mapNombres[firstHigh] || `canción #${firstHigh}`;
+            }
+            return `Predomina ${gen}, una de sus valoraciones más altas fue a "${cancionAlta}", ¡wow!`;
+        }
+        
+        const previewDiv = document.getElementById('historialPreview');
+        if(previewDiv){
+            let htmlPreview = '';
+            const mostrarEncuestas = encuestas.slice(0, 6);
+            mostrarEncuestas.forEach(enc => {
+                const fechaSim = enc.fecha || `2026-0${Math.floor(Math.random()*5)+1}-${Math.floor(Math.random()*28)+1}`;
+                const resumen = getResumenIA(enc);
+                const edadMostrar = enc.edad?.toString().replace(/\D/g, '') || "?";
+                htmlPreview += `<div style="background:#f1f5f9; border-radius:1rem; padding:0.8rem 1.2rem;">
+                    <i class="fas fa-user-check"></i> <strong>${enc.genero || "Prefiere no responder"} · ${edadMostrar} años · ${enc.ocupacion || "?"}</strong>  |  <span style="font-size:0.85rem;">📅 ${fechaSim}</span>
+                    <div style="margin-top:8px;">🎧 ${resumen}</div>
+                </div>`;
+            });
+            previewDiv.innerHTML = htmlPreview;
+        }
+    </script>
+</body>
+</html>
