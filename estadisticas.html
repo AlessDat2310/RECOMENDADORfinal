@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas Musicales | Melodify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f8;
+            color: #0f172a;
+        }
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+        .nav-links a:hover { color: #3b82f6; }
+        .dashboard {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        h1 {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #475569;
+            margin-bottom: 2rem;
+            border-left: 4px solid #f97316;
+            padding-left: 1rem;
+        }
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef2ff;
+        }
+        .stat-card i {
+            font-size: 2rem;
+            color: #f97316;
+            margin-bottom: 0.5rem;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .chart-container h3 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .recomendaciones-tabla {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            margin-top: 2rem;
+        }
+        @media (max-width: 750px) {
+            .charts-row { grid-template-columns: 1fr; }
+            .dashboard { padding: 0 1rem; }
+        }
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div class="logo"><i class="fas fa-headphones"></i> Melodify</div>
+    <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="recomendador.html">Recomendador</a>
+        <a href="encuestas_realizadas.html">Encuestas realizadas</a>
+        <a href="estadisticas.html">Estadísticas</a>
+        <a href="#">Tendencia hoy</a>
+        <a href="#">Música reciente</a>
+    </div>
+    <div><i class="far fa-user-circle"></i> Mi cuenta</div>
+</div>
+
+<div class="dashboard">
+    <h1><i class="fas fa-chart-line"></i> Estadísticas del Recomendador Musical</h1>
+    <div class="subtitle">Análisis en base a encuestas reales + datos generados por usuarios · Fecha: <span id="fechaActual"></span></div>
+
+    <div class="grid-cards">
+        <div class="stat-card"><i class="fas fa-users"></i><div class="stat-number" id="totalEncuestas">0</div><div>Total encuestas</div></div>
+        <div class="stat-card"><i class="fas fa-music"></i><div class="stat-number" id="generoTop">-</div><div>Género predominante</div></div>
+        <div class="stat-card"><i class="fas fa-calendar-week"></i><div class="stat-number" id="promedioEdad">0</div><div>Edad promedio</div></div>
+        <div class="stat-card"><i class="fas fa-chart-simple"></i><div class="stat-number" id="plataformaTop">-</div><div>Plataforma favorita</div></div>
+    </div>
+
+    <div id="chartsContainer">
+        <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Cargando datos del CSV...</div>
+    </div>
+
+    <div class="recomendaciones-tabla">
+        <h3><i class="fas fa-star"></i> Últimas recomendaciones generadas</h3>
+        <p style="margin-bottom: 1rem; font-size: 0.85rem;">Recomendaciones basadas en las valoraciones musicales de cada encuesta.</p>
+        <table id="recomendacionesTable">
+            <thead>
+                <tr><th>Fecha</th><th>Edad / Ocupación</th><th>Género predominante</th><th>Canción recomendada</th><th>Artista</th></tr>
+            </thead>
+            <tbody id="recomendacionesBody">
+                <tr><td colspan="5">Cargando datos......</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<footer>
+    <p>🎵 Estadísticas en tiempo real · Datos del archivo CSV + nuevas encuestas (localStorage)</p>
+</footer>
+
+<script>
+    // ---------- VARIABLES GLOBALES ----------
+    let todasEncuestas = [];
+    let existingCharts = [];
+    
+    // ---------- FUNCIÓN PARA PARSEAR CSV CON COMILLAS ----------
+    function parseCSV(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length === 0) return [];
+        const headers = lines[0].split(',').map(h => h.trim());
+        const records = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line || line.startsWith(',')) continue;
+            
+            let row = [];
+            let inQuotes = false;
+            let current = '';
+            
+            for (let char of line) {
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    row.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            row.push(current.trim());
+            
+            if (row.length < headers.length) continue;
+            
+            let obj = {};
+            headers.forEach((h, idx) => {
+                let value = row[idx] || "";
+                if (value.startsWith('"') && value.endsWith('"')) {
+                    value = value.slice(1, -1);
+                }
+                obj[h] = value;
+            });
+            records.push(obj);
+        }
+        return records;
+    }
+    
+    // ---------- FUNCIÓN PARA EXTRAER EDAD ----------
+    function extractAge(edadStr) {
+        if (!edadStr) return NaN;
+        const match = String(edadStr).match(/\d+/);
+        return match ? parseInt(match[0]) : NaN;
+    }
+    
+    // ---------- CONVERTIR REGISTRO CSV AL FORMATO INTERNO ----------
+    function adaptarRegistro(reg) {
+        return {
+            genero_musical_favorito: reg.genero_fav,
+            plataforma_musica: reg.medio,
+            motivo_musica: reg.why_music,
+            edad: extractAge(reg.edad),
+            ocupacion: reg.ocupacion?.trim() || "No especificada",
+            genero: reg.genero || "Prefiere no responder",
+            fecha: reg["Marca temporal"]
+        };
+    }
+    
+    // ---------- CARGAR CSV DESDE EL ARCHIVO ----------
+    async function cargarCSV() {
+        try {
+            const response = await fetch('base de datos_ev2.csv');
+            if (!response.ok) {
+                throw new Error(`No se pudo cargar el CSV: ${response.status}`);
+            }
+            const csvText = await response.text();
+            const rawData = parseCSV(csvText);
+            const encuestasCSV = rawData.map(adaptarRegistro).filter(e => e.genero_musical_favorito && e.genero_musical_favorito !== "");
+            console.log(`✅ CSV cargado: ${encuestasCSV.length} encuestas`);
+            return encuestasCSV;
+        } catch (error) {
+            console.error("Error al cargar CSV:", error);
+            document.getElementById('chartsContainer').innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i> Error: No se pudo cargar el archivo CSV<br>
+                    Asegúrate de que el archivo "base de datos_ev2.csv" esté en la misma carpeta<br>
+                    y que estés usando un servidor local (Live Server).
+                </div>
+            `;
+            return [];
+        }
+    }
+    
+    // ---------- CARGAR ENCUESTAS DE LOCALSTORAGE ----------
+    function cargarLocalStorage() {
+        const nuevasEncuestas = JSON.parse(localStorage.getItem('todasEncuestas')) || [];
+        console.log(`📱 localStorage: ${nuevasEncuestas.length} encuestas de usuarios`);
+        return nuevasEncuestas;
+    }
+    
+    // ---------- MODA (valor que más se repite) ----------
+    function moda(arr) { 
+        if (arr.length === 0) return "N/A";
+        let freq = {}; 
+        arr.forEach(v => freq[v] = (freq[v]||0)+1); 
+        let max = 0, modo = arr[0]; 
+        for(let k in freq) if(freq[k] > max) { max = freq[k]; modo = k; } 
+        return modo; 
+    }
+    
+    // ---------- CONTAR FRECUENCIAS PARA GRÁFICOS ----------
+    function contarFrecuencia(arr, labelKey) {
+        let freq = {};
+        arr.forEach(item => { 
+            let val = item[labelKey]; 
+            if(val && val !== "") freq[val] = (freq[val]||0) + 1; 
+        });
+        return { labels: Object.keys(freq), data: Object.values(freq) };
+    }
+    
+    // ---------- DESTRUIR GRÁFICOS EXISTENTES ----------
+    function destroyCharts() {
+        if (existingCharts) {
+            existingCharts.forEach(chart => { if (chart) chart.destroy(); });
+            existingCharts = [];
+        }
+    }
+    
+    // ---------- CREAR GRÁFICOS ----------
+    function createChart(id, type, data, options = {}) {
+        const canvas = document.getElementById(id);
+        if (!canvas) {
+            console.error(`Canvas ${id} no encontrado`);
+            return null;
+        }
+        try {
+            return new Chart(canvas, { type, data, options });
+        } catch(e) {
+            console.error(`Error creating chart ${id}:`, e);
+            return null;
+        }
+    }
+    
+    // ---------- RENDERIZAR ESTADÍSTICAS Y GRÁFICOS ----------
+    function renderEstadisticas(todasEncuestas) {
+        // Actualizar HTML de gráficos
+        document.getElementById('chartsContainer').innerHTML = `
+            <div class="charts-row">
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-pie"></i> Géneros musicales favoritos</h3>
+                    <canvas id="genresChart" width="400" height="300"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-bar"></i> Motivos para escuchar música</h3>
+                    <canvas id="motivesChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+            <div class="charts-row">
+                <div class="chart-container">
+                    <h3><i class="fab fa-spotify"></i> Plataformas más usadas</h3>
+                    <canvas id="platformsChart" width="400" height="300"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-line"></i> Distribución por ocupación</h3>
+                    <canvas id="occupationChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        `;
+        
+        // Calcular estadísticas
+        const total = todasEncuestas.length;
+        document.getElementById('totalEncuestas').innerText = total;
+        
+        let generosList = todasEncuestas.map(e => e.genero_musical_favorito).filter(g => g);
+        let topGenero = generosList.length > 0 ? moda(generosList) : "Rock";
+        document.getElementById('generoTop').innerText = topGenero;
+        
+        let edadesValidas = todasEncuestas.map(e => e.edad).filter(a => !isNaN(a) && a > 0 && a < 120);
+        let promedioEdad = edadesValidas.length > 0 ? (edadesValidas.reduce((a,b) => a+b, 0) / edadesValidas.length).toFixed(1) : "--";
+        document.getElementById('promedioEdad').innerText = promedioEdad;
+        
+        let plataformas = todasEncuestas.map(e => e.plataforma_musica).filter(p => p && p !== "");
+        let topPlataforma = plataformas.length > 0 ? moda(plataformas) : "Spotify";
+        document.getElementById('plataformaTop').innerText = topPlataforma;
+        
+        // Calcular frecuencias
+        const generosFreq = contarFrecuencia(todasEncuestas, 'genero_musical_favorito');
+        const motivosFreq = contarFrecuencia(todasEncuestas, 'motivo_musica');
+        const plataFreq = contarFrecuencia(todasEncuestas, 'plataforma_musica');
+        const ocupFreq = contarFrecuencia(todasEncuestas, 'ocupacion');
+        
+        // Destruir gráficos anteriores
+        destroyCharts();
+        
+        // Crear nuevos gráficos
+        const chart1 = createChart('genresChart', 'bar', {
+            labels: generosFreq.labels,
+            datasets: [{ label: 'Personas', data: generosFreq.data, backgroundColor: '#f97316', borderRadius: 8 }]
+        });
+        if (chart1) existingCharts.push(chart1);
+        
+        const chart2 = createChart('motivesChart', 'pie', {
+            labels: motivosFreq.labels,
+            datasets: [{ data: motivosFreq.data, backgroundColor: ['#3b82f6','#a855f7','#f97316','#10b981','#ef4444','#facc15','#06b6d4','#8b5cf6'] }]
+        });
+        if (chart2) existingCharts.push(chart2);
+        
+        const chart3 = createChart('platformsChart', 'doughnut', {
+            labels: plataFreq.labels,
+            datasets: [{ data: plataFreq.data, backgroundColor: ['#1DB954','#FA233B','#00A8E1','#ff9900','#FF0000','#6c757d','#a855f7','#3b82f6'] }]
+        });
+        if (chart3) existingCharts.push(chart3);
+        
+        const chart4 = createChart('occupationChart', 'bar', {
+            labels: ocupFreq.labels.slice(0, 10),
+            datasets: [{ label: 'Cantidad', data: ocupFreq.data.slice(0, 10), backgroundColor: '#3b82f6', borderRadius: 8 }]
+        });
+        if (chart4) existingCharts.push(chart4);
+        
+        console.log('Estadísticas calculadas:', { total, topGenero, promedioEdad, topPlataforma });
+    }
+    
+    // ---------- RENDERIZAR TABLA DE RECOMENDACIONES ----------
+    function renderRecomendaciones(encuestasCSV) {
+        let recomendacionesGuardadas = JSON.parse(localStorage.getItem('recomendacionesHistorial')) || [];
+        
+        if (recomendacionesGuardadas.length === 0 && encuestasCSV.length > 0) {
+            const cancionesMap = { Rock: "Bohemian Rhapsody", Pop: "Blinding Lights", "Hip-Hop": "Lose Yourself", Electrónica: "Around The World", Latina: "Gasolina", Soul: "Respect" };
+            const artistasMap = { Rock: "Queen", Pop: "The Weeknd", "Hip-Hop": "Eminem", Electrónica: "Daft Punk", Latina: "Daddy Yankee", Soul: "Aretha Franklin" };
+            for (let i = 0; i < Math.min(10, encuestasCSV.length); i++) {
+                let enc = encuestasCSV[i];
+                let gen = enc.genero_musical_favorito;
+                let recCancion = cancionesMap[gen] || "Bohemian Rhapsody";
+                let recArtista = artistasMap[gen] || "Queen";
+                let fechaBase = enc.fecha || `2026-0${Math.floor(Math.random()*5)+1}-${Math.floor(Math.random()*28)+1}`;
+                recomendacionesGuardadas.push({ 
+                    fecha: fechaBase, 
+                    edad: enc.edad || "?", 
+                    ocupacion: enc.ocupacion || "?", 
+                    generoPred: gen, 
+                    cancion: recCancion, 
+                    artista: recArtista 
+                });
+            }
+            localStorage.setItem('recomendacionesHistorial', JSON.stringify(recomendacionesGuardadas));
+        }
+        
+        const tbody = document.getElementById('recomendacionesBody');
+        if (!tbody) return;
+        
+        if (recomendacionesGuardadas.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="5">Sin recomendaciones aún</td></tr>'; 
+            return; 
+        }
+        
+        let html = '';
+        recomendacionesGuardadas.slice(-8).reverse().forEach(rec => {
+            html += `<tr>
+                        <td>${rec.fecha || "---"}</td>
+                        <td>${rec.edad} años / ${rec.ocupacion || '?'}</td>
+                        <td>${rec.generoPred}</td>
+                        <td>${rec.cancion}</td>
+                        <td>${rec.artista}</td>
+                     </tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+    
+    // ---------- INICIALIZAR ----------
+    async function inicializar() {
+        document.getElementById('fechaActual').innerText = new Date().toLocaleDateString('es-ES');
+        
+        // Cargar CSV desde archivo
+        const encuestasCSV = await cargarCSV();
+        
+        // Cargar localStorage
+        const nuevasEncuestas = cargarLocalStorage();
+        
+        // Combinar datos
+        todasEncuestas = [...encuestasCSV];
+        
+        nuevasEncuestas.forEach(enc => {
+            if (enc.genero_favorito_declarado) {
+                todasEncuestas.push({
+                    genero_musical_favorito: enc.genero_favorito_declarado,
+                    plataforma_musica: enc.plataforma_musica || "Spotify",
+                    motivo_musica: enc.motivo_musica || "Para relajarme",
+                    edad: parseInt(enc.edad) || 0,
+                    ocupacion: enc.ocupacion || "No especificada",
+                    genero: enc.genero_usuario || "Prefiere no responder",
+                    fecha: enc.fecha || new Date().toLocaleDateString('es-ES')
+                });
+            }
+        });
+        
+        console.log(`📊 Total encuestas combinadas: ${todasEncuestas.length}`);
+        
+        // Renderizar estadísticas y gráficos
+        if (todasEncuestas.length > 0) {
+            renderEstadisticas(todasEncuestas);
+        } else {
+            document.getElementById('chartsContainer').innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i> No hay datos para mostrar.<br>
+                    Carga el archivo CSV o completa algunas encuestas.
+                </div>
+            `;
+        }
+        
+        // Renderizar tabla de recomendaciones
+        renderRecomendaciones(encuestasCSV);
+    }
+    
+    // Ejecutar
+    inicializar();
+</script>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de encuestas | Melodify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+        .nav-links a:hover { color: #3b82f6; }
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .subtitle {
+            color: #475569;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #f97316;
+            padding-left: 1rem;
+        }
+        .filtros {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .filtros input, .filtros select {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+        }
+        .grid-encuestas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+        .card-encuesta {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            transition: 0.2s;
+            border: 1px solid #eef2ff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .card-encuesta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+        }
+        .badge-fecha {
+            font-size: 0.7rem;
+            background: #e2e8f0;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            color: #334155;
+        }
+        .badge-nueva {
+            background: #10b981;
+            color: white;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+        }
+        .genero-badge {
+            background: #f97316;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        hr {
+            margin: 1rem 0;
+        }
+        .insight-ia {
+            background: #f1f5f9;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            border-left: 4px solid #f97316;
+        }
+        .btn-limpiar {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+        }
+        .stats-resumen {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            margin-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 0 1rem; }
+            .grid-encuestas { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div class="logo"><i class="fas fa-headphones"></i> Melodify</div>
+    <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="recomendador.html">Recomendador</a>
+        <a href="encuestas_realizadas.html">Encuestas realizadas</a>
+        <a href="estadisticas.html">Estadísticas</a>
+        <a href="#">Tendencia hoy</a>
+        <a href="#">Música reciente</a>
+    </div>
+    <div><i class="far fa-user-circle"></i> Mi cuenta</div>
+</div>
+
+<div class="container">
+    <h1><i class="fas fa-history"></i> 📋 Historial de encuestas realizadas</h1>
+    <div class="subtitle">Encuestas del archivo CSV + tus nuevas encuestas enviadas desde el formulario</div>
+    
+    <div class="stats-resumen" id="statsResumen">
+        <span><i class="fas fa-database"></i> Cargando datos del CSV...</span>
+    </div>
+
+    <div class="filtros">
+        <i class="fas fa-filter"></i>
+        <input type="text" id="searchGenero" placeholder="Filtrar por género musical" style="width: 180px;">
+        <input type="text" id="searchEdad" placeholder="Edad" style="width: 100px;">
+        <select id="filtroOcupacion">
+            <option value="">Todas las ocupaciones</option>
+            <option>Estudiante</option><option>Docente</option><option>Empleado/a</option>
+            <option>Trabajador/a independiente</option><option>Profesionista</option>
+            <option>Inversionista</option><option>Auditor de TI</option><option>Manager</option>
+            <option>Pintor</option><option>Arqueolga</option><option>Trabajar</option>
+        </select>
+        <button id="resetFiltros" class="btn-limpiar">Limpiar</button>
+    </div>
+
+    <div id="listaEncuestas" class="grid-encuestas">
+        <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Cargando encuestas desde CSV y localStorage...</div>
+    </div>
+</div>
+<footer>
+    <p>🎵 Datos combinados: CSV (base de datos_ev2.csv) + nuevas encuestas que hayas enviado</p>
+    <button onclick="borrarMisEncuestas()" style="margin-top:0.5rem; background:none; border:1px solid #cbd5e1; padding:0.3rem 1rem; border-radius:2rem; cursor:pointer; font-size:0.7rem;"><i class="fas fa-trash-alt"></i> Borrar MIS encuestas (solo las que envié)</button>
+</footer>
+
+<script>
+    // ---------- VARIABLES GLOBALES ----------
+    let encuestasCSV = [];        // Datos del archivo CSV
+    let encuestasUsuario = [];    // Datos de localStorage
+    let encuestasUnificadas = []; // Todos combinados
+    
+    // Mapa de nombres de canciones para insights
+    const mapNombres = {
+        1:"Bohemian Rhapsody", 2:"Somebody to Love", 3:"Smells Like Teen Spirit", 4:"Come As You Are",
+        5:"Hotel California", 6:"Take It Easy", 7:"Stairway to Heaven", 8:"Sweet Child O' Mine",
+        9:"Livin' on a Prayer", 10:"Don't Stop Believin'", 11:"Blinding Lights", 12:"Save Your Tears",
+        13:"Dancing Queen", 14:"Mamma Mia", 15:"Billie Jean", 16:"Beat It", 17:"Anti-Hero", 
+        18:"Cruel Summer", 19:"As It Was", 20:"Watermelon Sugar", 21:"Flowers", 22:"Midnight Sky",
+        23:"Espresso", 24:"Please Please Please", 25:"greedy", 26:"exes", 27:"Levitating", 
+        28:"Don't Start Now", 29:"Lose Yourself", 30:"Till I Collapse"
+    };
+    
+    // ---------- FUNCIÓN PARA PARSEAR CSV CON COMILLAS ----------
+    function parseCSV(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length === 0) return [];
+        const headers = lines[0].split(',').map(h => h.trim());
+        const records = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line || line.startsWith(',')) continue;
+            
+            let row = [];
+            let inQuotes = false;
+            let current = '';
+            
+            for (let char of line) {
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    row.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            row.push(current.trim());
+            
+            if (row.length < headers.length) continue;
+            
+            let obj = {};
+            headers.forEach((h, idx) => {
+                let value = row[idx] || "";
+                if (value.startsWith('"') && value.endsWith('"')) {
+                    value = value.slice(1, -1);
+                }
+                obj[h] = value;
+            });
+            records.push(obj);
+        }
+        return records;
+    }
+    
+    // ---------- FUNCIÓN PARA EXTRAER EDAD (ej: "20 años" → 20) ----------
+    function extractAge(edadStr) {
+        if (!edadStr) return "?";
+        const match = String(edadStr).match(/\d+/);
+        return match ? match[0] : edadStr;
+    }
+    
+    // ---------- CONVERTIR REGISTRO CSV AL FORMATO INTERNO ----------
+    function adaptarRegistroCSV(reg) {
+        return {
+            id: reg.id || Math.random(),
+            genero: reg.genero || "Prefiere no responder",
+            edad: extractAge(reg.edad),
+            ocupacion: (reg.ocupacion || "No especificada").trim(),
+            genero_musical_favorito: reg.genero_fav || "No especificado",
+            plataforma_musica: reg.medio || "No especificada",
+            motivo_musica: reg.why_music || "No especificado",
+            fecha: reg["Marca temporal"] || `2026-01-01`,
+            tipo: "csv"
+        };
+    }
+    
+    // ---------- CARGAR CSV DESDE EL ARCHIVO ----------
+    async function cargarCSV() {
+        try {
+            // Intentar cargar el archivo CSV desde la misma carpeta
+            const response = await fetch('base de datos_ev2.csv');
+            if (!response.ok) {
+                throw new Error(`No se pudo cargar el CSV: ${response.status}`);
+            }
+            const csvText = await response.text();
+            const rawData = parseCSV(csvText);
+            encuestasCSV = rawData.map(adaptarRegistroCSV).filter(e => e.genero_musical_favorito && e.genero_musical_favorito !== "");
+            
+            console.log(`✅ CSV cargado: ${encuestasCSV.length} encuestas`);
+            return true;
+        } catch (error) {
+            console.error("Error al cargar CSV:", error);
+            document.getElementById('statsResumen').innerHTML = `
+                <span><i class="fas fa-exclamation-triangle"></i> Error: No se pudo cargar el CSV</span>
+                <span>Asegúrate de que el archivo "base de datos_ev2.csv" esté en la misma carpeta</span>
+                <span>Si usas Live Server, debería funcionar automáticamente</span>
+            `;
+            return false;
+        }
+    }
+    
+    // ---------- CARGAR ENCUESTAS DE LOCALSTORAGE ----------
+    function cargarLocalStorage() {
+        encuestasUsuario = JSON.parse(localStorage.getItem('todasEncuestas')) || [];
+        console.log(`📱 localStorage: ${encuestasUsuario.length} encuestas de usuarios`);
+    }
+    
+    // ---------- UNIFICAR TODAS LAS ENCUESTAS ----------
+    function unificarEncuestas() {
+        encuestasUnificadas = [...encuestasCSV];
+        
+        encuestasUsuario.forEach((enc, index) => {
+            encuestasUnificadas.push({
+                id: `usuario_${Date.now()}_${index}`,
+                genero: enc.genero_usuario || "Prefiero no responder",
+                edad: enc.edad || "?",
+                ocupacion: enc.ocupacion || "No especificada",
+                genero_musical_favorito: enc.genero_favorito_declarado || enc.estilo_recomendado || "Pop",
+                plataforma_musica: enc.plataforma_musica || "No especificada",
+                motivo_musica: enc.motivo_musica || "Para disfrutar",
+                fecha: enc.fecha || new Date().toLocaleDateString('es-ES'),
+                tipo: "usuario",
+                cancion_recomendada: enc.cancion_recomendada || "",
+                artista_recomendado: enc.artista_recomendado || ""
+            });
+        });
+        
+        // Actualizar resumen
+        const statsDiv = document.getElementById('statsResumen');
+        statsDiv.innerHTML = `
+            <span><i class="fas fa-database"></i> Total encuestas: ${encuestasUnificadas.length}</span>
+            <span><i class="fas fa-file-csv"></i> Base histórica (CSV): ${encuestasCSV.length}</span>
+            <span><i class="fas fa-user-plus"></i> Tus encuestas: ${encuestasUsuario.length}</span>
+        `;
+        
+        return encuestasUnificadas;
+    }
+    
+    // ---------- GENERAR INSIGHT IA ----------
+    function generarInsight(encuesta) {
+        const generoFav = encuesta.genero_musical_favorito;
+        if (encuesta.tipo === "usuario" && encuesta.cancion_recomendada) {
+            return `🎧 Encuesta enviada el ${encuesta.fecha}. Basado en sus respuestas, se recomendó: "${encuesta.cancion_recomendada}" de ${encuesta.artista_recomendado || "artista destacado"}. ¡Perfil definido hacia el ${generoFav}!`;
+        }
+        // Para CSV, insight basado en el género
+        return `🎧 Según sus respuestas, predomina el género ${generoFav}. ¡Gracias por participar en el estudio musical!`;
+    }
+    
+    // ---------- RENDERIZAR ENCUESTAS ----------
+    function renderizarEncuestas(filtradas) {
+        const contenedor = document.getElementById('listaEncuestas');
+        
+        if (!filtradas.length) {
+            contenedor.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem;">No hay encuestas con esos filtros 🌟</div>`;
+            return;
+        }
+        
+        let html = '';
+        filtradas.forEach(enc => {
+            const insight = generarInsight(enc);
+            const esNueva = enc.tipo === "usuario";
+            const fechaMostrar = enc.fecha || '2026-01-01';
+            html += `
+                <div class="card-encuesta">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="badge-fecha"><i class="far fa-calendar-alt"></i> ${fechaMostrar}</span>
+                        <div>
+                            ${esNueva ? '<span class="badge-nueva"><i class="fas fa-star"></i> Nueva</span>' : ''}
+                            <span class="genero-badge">${enc.genero_musical_favorito}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <i class="fas fa-user"></i> <strong>${enc.genero || "Prefiere no responder"}</strong> · ${enc.edad || "?"} años · ${enc.ocupacion || "?"}
+                    </div>
+                    <div style="margin-top: 6px; font-size:0.85rem;">
+                        <i class="fas fa-headphones"></i> Plataforma: ${enc.plataforma_musica || "—"} · Motivo: ${enc.motivo_musica || "—"}
+                    </div>
+                    <hr>
+                    <div class="insight-ia">
+                        <i class="fas fa-robot" style="margin-right:6px;"></i> <strong>Insight IA:</strong> ${insight}
+                    </div>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
+    }
+    
+    // ---------- APLICAR FILTROS ----------
+    function aplicarFiltros() {
+        const generoBuscar = document.getElementById('searchGenero').value.toLowerCase();
+        const edadBuscar = document.getElementById('searchEdad').value;
+        const ocupacionFiltro = document.getElementById('filtroOcupacion').value;
+        
+        let filtradas = [...encuestasUnificadas];
+        
+        if (generoBuscar) {
+            filtradas = filtradas.filter(e => e.genero_musical_favorito?.toLowerCase().includes(generoBuscar));
+        }
+        if (edadBuscar && !isNaN(edadBuscar)) {
+            filtradas = filtradas.filter(e => parseInt(e.edad) === parseInt(edadBuscar));
+        }
+        if (ocupacionFiltro) {
+            filtradas = filtradas.filter(e => e.ocupacion?.toLowerCase().includes(ocupacionFiltro.toLowerCase()));
+        }
+        
+        renderizarEncuestas(filtradas);
+    }
+    
+    // ---------- BORRAR ENCUESTAS DEL USUARIO ----------
+    window.borrarMisEncuestas = function() {
+        if (confirm("¿Eliminar TODAS tus encuestas enviadas? (las del CSV original se conservan)")) {
+            localStorage.removeItem('todasEncuestas');
+            location.reload();
+        }
+    };
+    
+    // ---------- INICIALIZAR ----------
+    async function inicializar() {
+        // Mostrar loading
+        document.getElementById('listaEncuestas').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-pulse"></i> Cargando encuestas desde CSV y localStorage...</div>';
+        
+        // Cargar CSV
+        const csvCargado = await cargarCSV();
+        
+        // Cargar localStorage
+        cargarLocalStorage();
+        
+        // Unificar
+        unificarEncuestas();
+        
+        // Renderizar todas
+        renderizarEncuestas(encuestasUnificadas);
+        
+        // Configurar eventos de filtros
+        document.getElementById('searchGenero').addEventListener('input', aplicarFiltros);
+        document.getElementById('searchEdad').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroOcupacion').addEventListener('change', aplicarFiltros);
+        document.getElementById('resetFiltros').addEventListener('click', () => {
+            document.getElementById('searchGenero').value = '';
+            document.getElementById('searchEdad').value = '';
+            document.getElementById('filtroOcupacion').value = '';
+            renderizarEncuestas(encuestasUnificadas);
+        });
+    }
+    
+    // Ejecutar
+    inicializar();
+</script>
+</body>
+</html>
